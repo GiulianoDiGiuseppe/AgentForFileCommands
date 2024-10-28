@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "agentforfilecommands"
+version = "0.1.0"
+description = "LLM File System Agent: A Python server that enables an LLM-based agent to execute command-line operations on the file system via a REST API."
+authors = ["Giuliano Di Giuseppe <digigiu00@gmail.com>"]
+license = "GPL-3.0 license"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.4"
+uvicorn = "^0.32.0"
+langchain = "^0.3.4"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+pylint = "^3.3.1"
+mypy = "^1.13.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
