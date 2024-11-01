@@ -2,137 +2,81 @@
 
 LLM File System Agent: A Python server that enables an LLM-based agent to execute command-line operations on the file system via a REST API.
 
-## Requirements
+## Guide to Clone and Activate a Project with Poetry
 
-- Python 3.7 or later
-- Poetry for dependency management
-- FastAPI or Flask for the server
-- LangChain or LangGraph for creating the agent
-- An LLM (e.g., Google AI Studio)
+* **Open Terminal or Command Prompt**:
+* **Clone the Repository**:
 
-## Setup Instructions
+  Run the following command, replacing `<repository_url>` with the actual URL of the repository:
 
-### Step 1: Install Python
+  ```bash
 
-1. Download and install Python from the [official website](https://www.python.org/downloads/).
-2. Ensure to check the box "Add Python to PATH" during installation.
+  git clone <repository_url>
 
-### Step 2: Install Poetry
+  cd <repository_name>
 
-1. Open Command Prompt (Win + R, type `cmd`, and hit Enter).
-2. Install Poetry by running:
-   ```bash
-   pip install poetry
-   ```
-3. Verify the installation with:
-   ```bash
-   poetry --version
-   ```
+  ```
+* **Install Dependencies**:
 
-### Step 3: Clone the Repository
+  Install all dependencies listed in `pyproject.toml`:
 
-1. Clone your repository using:
-   ```bash
-   git clone <repository_url>
-   cd <repository_name>
-   ```
+  ```bash
 
-### Step 4: Set Up the Python Environment
+  poetry install
 
-1. Initialize a new Poetry project:
+  ```
+* **Activate the Virtual Environment**:
 
-   ```bash
-   poetry init
-   ```
+  Activate the Poetry virtual environment:
 
-   Follow the prompts to set up your project.
-2. Install required dependencies:
+  ```bash
 
-   ```bash
-   poetry add fastapi uvicorn langchain
-   ```
+  poetry shell
 
+  ```
 
+## Run Code
 
-## Agents
-
-We have X agents, Modfier , Searcher , Mover
-
-
-### Step 5: Create the Main Application File
-
-1. Create a file named `main.py` and add the following code:
-   ```python
-   from fastapi import FastAPI
-   from pydantic import BaseModel
-   import subprocess
-
-   app = FastAPI()
-
-   class Message(BaseModel):
-       msg: str
-
-   @app.post("/agent")
-   async def agent_command(message: Message):
-       command = message.msg
-       result = subprocess.run(command, shell=True, capture_output=True, text=True)
-       return {"output": result.stdout, "error": result.stderr}
-
-   if __name__ == "__main__":
-       import uvicorn
-       uvicorn.run(app, host="0.0.0.0", port=8000)
-   ```
-
-### Step 6: Code Quality Checks
-
-1. Add development dependencies:
-
-   ```bash
-   poetry add --dev black pylint mypy
-   ```
-2. Run code formatting with Black:
-
-   ```bash
-   poetry run black .
-   ```
-3. Run linter with Pylint:
-
-   ```bash
-   poetry run pylint main.py
-   ```
-4. Run type checks with Mypy:
-
-   ```bash
-   poetry run mypy main.py
-   ```
-
-### Step 7: Run the Server
-
-Start the FastAPI server with:
+To start the backend, use the following command:
 
 ```bash
-poetry run uvicorn main:app --host 0.0.0.0 --port 8000
+poetry run python -m uvicorn app:app --reload
 ```
 
-### Step 8: Test the API
+Once the server is running, you can make POST requests to the following endpoint:  **[http://0.0.0.0:8000/agents](http://0.0.0.0:8000/agents)** .
 
-You can test your API using Postman or `curl`. For example, using `curl`:
+### Request Body
 
-```bash
-curl -X POST "http://localhost:8000/agent" -H "Content-Type: application/json" -d "{"msg": "dir"}"
+The body of the request should be formatted as follows:
+
+```
+{
+    "msg" :    "I want to find all files in directory <PATH_DIRECTORY> with txt extension. Then for those of these files which contain at least 1 word log, change their extension to .log"
+}
 ```
 
-### Step 9: Prepare for Submission
+The result will be provided in the response from the last agent.
 
-1. Commit your changes:
+## Workflow
 
-   ```bash
-   git add .
-   git commit -m "Initial implementation of LLM File System Agent"
-   ```
-2. Push to GitHub:
+The system consists of a supervisor agent and four executor agents. The supervisor agent's code can be found in `src/agents/supervisor_agent.py`. Each executor agent has its own set of functions located in `src/tools`.
 
-   ```bash
-   git push origin main
-   ```
-3. Write a README.md to describe your project.
+### Process Overview
+
+1. The supervisor agent receives the initial message.
+2. Based on the message, it decides which executor agent should handle the request or sends a "FINISH" message to conclude the workflow.
+3. The supervisor monitors the responses from the executor agents and determines whether to continue or halt the process.
+
+This design ensures clear control over the execution flow and allows for effective management of the agents.
+
+
+# Conclusions
+
+* **Performance Comparison** : The **gpt4o-mini** often created infinite loops and failed to terminate, while **gpt4o** demonstrated significantly higher accuracy.
+  * **Improvement Suggestion** : Consider developing an additional agent to refine and clarify the outputs from the executor agents.
+  * **Prompt Optimization** : Further optimization of the supervisor agent's prompts could enhance its decision-making capabilities.
+* **Agent Organization** : Initially, I tested integrating all tools into a single executor agent. However, I opted to separate the tools into multiple executor agents for better modularity and management.
+* **Security Measures** : The current design lacks safeguards against potentially malicious requests and does not incorporate oversight before executing certain actions. Implementing such measures would significantly improve system integrity.
+* **Functionality Improvements** : The functions developed are quite basic and present opportunities for optimization:
+  * **Enhanced File Search** : Implement recursive searching using functions like `os.walk` to traverse deeper file structures rather than limiting the search to the top level with `os.listdir`.
+  * **Path Optimization** : Improve the concatenation of file paths for efficiency and readability.
