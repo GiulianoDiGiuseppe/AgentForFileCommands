@@ -5,7 +5,7 @@ This module provides functions to execute shell commands and check for command v
 
 from langchain_core.messages import HumanMessage
 from langgraph.graph import StateGraph
-from src.agents.node_agent import create_nodes, AgentState
+from src.agents.executor_agent import create_nodes, AgentState
 from src.agents.graph_agent import add_edges_to_graph, add_nodes_to_graph
 from src.llm.openai import llm
 from src.utils.logger_utils import logger
