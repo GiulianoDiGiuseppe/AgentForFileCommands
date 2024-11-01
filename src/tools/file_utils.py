@@ -19,9 +19,9 @@ def get_file_size(path: str, filename: str) -> int:
     file_path = os.path.join(path, filename)
     if os.path.isfile(file_path):
         size = os.path.getsize(file_path)
-        logger.info(f"Size of file '{filename}': {size} bytes")
+        logger.info("Size of file '%s': %d bytes", filename, size)
         return size
-    logger.error(f"File '{filename}' does not exist in '{path}'.")
+    logger.error("File '%s' does not exist in '%s'.", filename, path)
     raise FileNotFoundError(f"Il file '{filename}' non esiste in '{path}'.")
 
 
@@ -34,7 +34,7 @@ def compress_files_to_zip(path: str, zip_filename: str) -> str:
             item_path = os.path.join(path, item)
             if os.path.isfile(item_path):
                 zip_file.write(item_path, os.path.relpath(item_path, path))
-    logger.info(f"Compressed files into: {zip_path}")
+    logger.info("Compressed files into: %s", zip_path)
     return zip_path
 
 
@@ -42,7 +42,7 @@ def compress_files_to_zip(path: str, zip_filename: str) -> str:
 def list_files(path: str) -> list:
     """Returns a list of all files in the specified directory."""
     files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-    logger.info(f"Files in '{path}': {files}")
+    logger.info("Files in '%s': %s", path, files)
     return files
 
 
@@ -52,9 +52,9 @@ def delete_file(path: str, filename: str) -> str:
     file_path = os.path.join(path, filename)
     if os.path.isfile(file_path):
         os.remove(file_path)
-        logger.info(f"Deleted file: {file_path}")
+        logger.info("Deleted file: %s", file_path)
         return f"File '{filename}' deleted."
-    logger.error(f"File '{filename}' does not exist in '{path}'.")
+    logger.error("File '%s' does not exist in '%s'.", filename, path)
     raise FileNotFoundError(f"Il file '{filename}' non esiste in '{path}'.")
 
 
@@ -65,9 +65,9 @@ def copy_file(source_path: str, destination_path: str, filename: str) -> str:
     destination_file = os.path.join(destination_path, filename)
     if os.path.isfile(source_file):
         shutil.copy(source_file, destination_file)
-        logger.info(f"Copied file from '{source_file}' to '{destination_file}'")
+        logger.info("Copied file from '%s' to '%s'", source_file, destination_file)
         return destination_file
-    logger.error(f"File '{filename}' does not exist in '{source_path}'.")
+    logger.error("File '%s' does not exist in '%s'.", filename, source_path)
     raise FileNotFoundError(f"Il file '{filename}' non esiste in '{source_path}'.")
 
 
@@ -76,7 +76,7 @@ def find_files_by_extension(path: str, extension: str) -> list:
     """Finds and returns a list of files with the specified extension."""
     search_pattern = os.path.join(path, f"*.{extension}")
     files = glob.glob(search_pattern)
-    logger.info(f"Found files with extension '{extension}' in '{path}': {files}")
+    logger.info("Found files with extension '%s' in '%s': %s", extension, path, files)
     return files
 
 
@@ -87,9 +87,9 @@ def move_file(source_path: str, destination_path: str, filename: str) -> str:
     destination_file = os.path.join(destination_path, filename)
     if os.path.isfile(source_file):
         shutil.move(source_file, destination_file)
-        logger.info(f"Moved file from '{source_file}' to '{destination_file}'")
+        logger.info("Moved file from '%s' to '%s'", source_file, destination_file)
         return destination_file
-    logger.error(f"File '{filename}' does not exist in '{source_path}'.")
+    logger.error("File '%s' does not exist in '%s'.", filename, source_path)
     raise FileNotFoundError(f"Il file '{filename}' non esiste in '{source_path}'.")
 
 

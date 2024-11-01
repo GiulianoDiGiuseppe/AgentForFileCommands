@@ -5,7 +5,6 @@ file operation tools using a language model.
 """
 
 from functools import partial
-import operator
 from typing import Sequence
 from typing_extensions import TypedDict
 from langchain_core.messages import BaseMessage, HumanMessage

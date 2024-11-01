@@ -1,7 +1,7 @@
 """Module for managing workflow graphs in file operations using agents."""
 
-from .supervisor_agent import members, supervisor_agent
 from langgraph.graph import END, START  # Importing only what is necessary
+from .supervisor_agent import members, supervisor_agent
 
 
 def add_nodes_to_graph(
@@ -44,8 +44,8 @@ def add_edges_to_graph(workflow):
         # Workers report back to the supervisor when done
         workflow.add_edge(member, "Supervisor")
 
-    # # The supervisor populates the "next" field in the graph state
-    # # which routes to a node or finishes
+    # The supervisor populates the "next" field in the graph state
+    # which routes to a node or finishes
     conditional_map = {k: k for k in members}
     conditional_map["FINISH"] = END
     workflow.add_conditional_edges("Supervisor", lambda x: x["next"], conditional_map)

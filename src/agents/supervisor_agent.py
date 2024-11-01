@@ -5,8 +5,8 @@ between various worker agents, directing their actions and managing
 conversations.
 """
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from typing import Literal
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel
 from src.llm.openai import llm
 
@@ -60,11 +60,14 @@ def supervisor_agent(state) -> dict:
             MessagesPlaceholder(variable_name="messages"),
             (
                 "system",
-                "After reviewing the conversation above, assess whether all tasks have been completed. "
-                "If any worker still needs to take action, indicate who should proceed by selecting from the following options: {options}. "
-                "If all tasks are finished, respond with 'END' to conclude the conversation. "
-                "For questions about the current folder, respond directly with the folder name and avoid any additional commentary. "
-                "Your response should be clear and decisive.",
+                "After reviewing the conversation above, assess whether"
+                " all tasks have been completed.If any worker still needs"
+                " to take action, indicate who should proceed by selecting "
+                "from the following options: {options}. "
+                "If all tasks are finished, respond with 'END' to conclude "
+                "the conversation. For questions about the current folder, "
+                "respond directly with the folder name and avoid any additional "
+                "commentary. Your response should be clear and decisive.",
             ),
         ]
     ).partial(options=str(options), members=", ".join(members))

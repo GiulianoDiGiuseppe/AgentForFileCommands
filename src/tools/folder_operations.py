@@ -1,7 +1,8 @@
 """
 Folder Operations Module.
 
-This module provides a set of utilities for managing folders, including creation, listing, navigation,
+This module provides a set of utilities for managing folders, including creation, 
+listing, navigation,
 searching, renaming, moving, and copying folders, as well as retrieving folder sizes.
 """
 
@@ -16,7 +17,7 @@ def create_folder(path: str, folder_name: str) -> str:
     """Creates a new folder in the specified path."""
     folder_path = os.path.join(path, folder_name)
     os.makedirs(folder_path, exist_ok=True)
-    logger.info(f"Created folder: {folder_path}")
+    logger.info("Created folder: %s", folder_path)
     return folder_path
 
 
@@ -24,7 +25,7 @@ def create_folder(path: str, folder_name: str) -> str:
 def get_current_folder() -> str:
     """Returns the current working directory."""
     current_folder = os.getcwd()
-    logger.info(f"Current folder: {current_folder}")
+    logger.info("Current folder: %s", current_folder)
     return current_folder
 
 
@@ -34,7 +35,7 @@ def list_folders(path: str) -> list:
     folders = [
         item for item in os.listdir(path) if os.path.isdir(os.path.join(path, item))
     ]
-    logger.info(f"Folders in '{path}': {folders}")
+    logger.info("Folders in '%s': %s", path, folders)
     return folders
 
 
@@ -42,7 +43,7 @@ def list_folders(path: str) -> list:
 def go_to_parent_folder(path: str) -> str:
     """Returns the absolute path of the parent folder."""
     parent_folder = os.path.abspath(os.path.join(path, ".."))
-    logger.info(f"Parent folder: {parent_folder}")
+    logger.info("Parent folder: %s", parent_folder)
     return parent_folder
 
 
@@ -51,9 +52,9 @@ def go_to_child_folder(path: str, child_folder: str) -> str:
     """Returns the absolute path of the specified child folder."""
     child_path = os.path.join(path, child_folder)
     if os.path.isdir(child_path):
-        logger.info(f"Child folder: {child_path}")
+        logger.info("Child folder: %s", child_path)
         return os.path.abspath(child_path)
-    logger.error(f"Child folder '{child_folder}' does not exist in '{path}'.")
+    logger.error("Child folder '%s' does not exist in '%s'.", child_folder, path)
     raise FileNotFoundError(
         f"La cartella figlia '{child_folder}' non esiste in '{path}'."
     )
@@ -61,11 +62,12 @@ def go_to_child_folder(path: str, child_folder: str) -> str:
 
 @tool
 def search_folder_by_name(path: str, folder_name: str) -> str:
-    """Searches for a folder by name in the specified directory and its parent directories, returning its path if found."""
+    """Searches for a folder by name in the specified directory and its parent directories,
+    returning its path if found."""
     while True:
         if folder_name in os.listdir(path):
             found_path = os.path.join(path, folder_name)
-            logger.info(f"Found folder '{folder_name}' at: {found_path}")
+            logger.info("Found folder '%s' at: %s", folder_name, found_path)
             return found_path
 
         parent_path = os.path.dirname(path)
@@ -73,7 +75,7 @@ def search_folder_by_name(path: str, folder_name: str) -> str:
             break
         path = parent_path
 
-    logger.warning(f"Folder '{folder_name}' not found in '{path}'.")
+    logger.warning("Folder '%s' not found in '%s'.", folder_name, path)
     return None
 
 
@@ -83,7 +85,7 @@ def count_folders(path: str) -> int:
     folder_count = sum(
         os.path.isdir(os.path.join(path, name)) for name in os.listdir(path)
     )
-    logger.info(f"Number of folders in '{path}': {folder_count}")
+    logger.info("Number of folders in '%s': %d", path, folder_count)
     return folder_count
 
 
@@ -95,7 +97,9 @@ def filter_folders_by_name(path: str, filter_name: str) -> list:
         for name in os.listdir(path)
         if os.path.isdir(os.path.join(path, name)) and filter_name in name
     ]
-    logger.info(f"Filtered folders containing '{filter_name}' in '{path}': {folders}")
+    logger.info(
+        "Filtered folders containing '%s' in '%s': %s", filter_name, path, folders
+    )
     return folders
 
 
@@ -107,10 +111,13 @@ def rename_folder(path: str, old_folder_name: str, new_folder_name: str) -> str:
     if os.path.isdir(old_folder_path):
         os.rename(old_folder_path, new_folder_path)
         logger.info(
-            f"Renamed folder from '{old_folder_name}' to '{new_folder_name}' in '{path}'"
+            "Renamed folder from '%s' to '%s' in '%s'",
+            old_folder_name,
+            new_folder_name,
+            path,
         )
         return new_folder_path
-    logger.error(f"Folder '{old_folder_name}' does not exist in '{path}'.")
+    logger.error("Folder '%s' does not exist in '%s'.", old_folder_name, path)
     raise FileNotFoundError(f"La cartella '{old_folder_name}' non esiste in '{path}'.")
 
 
@@ -121,9 +128,9 @@ def move_folder(source_path: str, destination_path: str, folder_name: str) -> st
     destination_folder = os.path.join(destination_path, folder_name)
     if os.path.isdir(source_folder):
         os.rename(source_folder, destination_folder)
-        logger.info(f"Moved folder from '{source_folder}' to '{destination_folder}'")
+        logger.info("Moved folder from '%s' to '%s'", source_folder, destination_folder)
         return destination_folder
-    logger.error(f"Folder '{folder_name}' does not exist in '{source_path}'.")
+    logger.error("Folder '%s' does not exist in '%s'.", folder_name, source_path)
     raise FileNotFoundError(
         f"La cartella '{folder_name}' non esiste in '{source_path}'."
     )
@@ -136,9 +143,11 @@ def copy_folder(source_path: str, destination_path: str, folder_name: str) -> st
     destination_folder = os.path.join(destination_path, folder_name)
     if os.path.isdir(source_folder):
         shutil.copytree(source_folder, destination_folder)
-        logger.info(f"Copied folder from '{source_folder}' to '{destination_folder}'")
+        logger.info(
+            "Copied folder from '%s' to '%s'", source_folder, destination_folder
+        )
         return destination_folder
-    logger.error(f"Folder '{folder_name}' does not exist in '{source_path}'.")
+    logger.error("Folder '%s' does not exist in '%s'.", folder_name, source_path)
     raise FileNotFoundError(
         f"La cartella '{folder_name}' non esiste in '{source_path}'."
     )
@@ -148,7 +157,7 @@ def copy_folder(source_path: str, destination_path: str, folder_name: str) -> st
 def list_subfolders(path: str) -> list:
     """Returns a list of all subfolders in the specified directory."""
     subfolders = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
-    logger.info(f"Subfolders in '{path}': {subfolders}")
+    logger.info("Subfolders in '%s': %s", path, subfolders)
     return subfolders
 
 
@@ -162,9 +171,9 @@ def get_folder_size(path: str, folder_name: str) -> int:
             for f in os.listdir(folder_path)
             if os.path.isfile(os.path.join(folder_path, f))
         )
-        logger.info(f"Total size of folder '{folder_name}': {total_size} bytes")
+        logger.info("Total size of folder '%s': %d bytes", folder_name, total_size)
         return total_size
-    logger.error(f"Folder '{folder_name}' does not exist in '{path}'.")
+    logger.error("Folder '%s' does not exist in '%s'.", folder_name, path)
     raise FileNotFoundError(f"La cartella '{folder_name}' non esiste in '{path}'.")
 
 
