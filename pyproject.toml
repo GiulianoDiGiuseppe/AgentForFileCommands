@@ -11,6 +11,8 @@ python = "^3.12"
 fastapi = "^0.115.4"
 uvicorn = "^0.32.0"
 langchain = "^0.3.4"
+langgraph = "^0.2.43"
+langchain-openai = "^0.2.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
