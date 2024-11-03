@@ -1,6 +1,7 @@
 # AgentForFileCommands
 
-LLM File System Agent: A Python server that enables an LLM-based agent to execute command-line operations on the file system via a REST API.
+LLM File System Agent: A Python server that enables an LLM-based agent to perform operations on files and folders through a REST API.
+
 
 ## Guide to Clone and Activate a Project with Poetry
 
@@ -40,10 +41,10 @@ LLM File System Agent: A Python server that enables an LLM-based agent to execut
 To start the backend, use the following command:
 
 ```bash
-poetry run python -m uvicorn app:app --reload
+poetry run python -m uvicorn src.app:app --reload
 ```
 
-Once the server is running, you can make POST requests to the following endpoint:  **[http://0.0.0.0:8000/agents](http://0.0.0.0:8000/agents)** .
+Once the server is running, you can make POST requests to the following endpoint:  **[http://0.0.0.0:8000/agent](http://0.0.0.0:8000/agents)** .
 
 ### Request Body
 
@@ -69,7 +70,6 @@ The system consists of a supervisor agent and four executor agents. The supervis
 
 This design ensures clear control over the execution flow and allows for effective management of the agents.
 
-
 # Conclusions
 
 * **Performance Comparison** : The **gpt4o-mini** often created infinite loops and failed to terminate, while **gpt4o** demonstrated significantly higher accuracy.
@@ -80,3 +80,10 @@ This design ensures clear control over the execution flow and allows for effecti
 * **Functionality Improvements** : The functions developed are quite basic and present opportunities for optimization:
   * **Enhanced File Search** : Implement recursive searching using functions like `os.walk` to traverse deeper file structures rather than limiting the search to the top level with `os.listdir`.
   * **Path Optimization** : Improve the concatenation of file paths for efficiency and readability.
+
+
+## Future Work
+
+1. **Self-Reflection** : Adopt **ReAct** to specify how the supervisor divides tasks step-by-step and communicate what is missing after each action of the executors, improving transparency in the workflow for Explainable AI. [Langchain create react agent](https://python.langchain.com/v0.1/docs/modules/agents/agent_types/react/)
+2. **User Interaction** : Request permission for operations and utilize **Chain of Hindsight (CoH)** for improvements.
+3. **Memory Evolution** : Update the operational context and apply **Algorithm Distillation (AD)** to learn from past stories.
